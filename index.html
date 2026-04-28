@@ -468,13 +468,17 @@
                 <div class="shop" id="shop"></div>
                 
                 <div class="defense-section">
+                    <h3 style="color: #5a7a2e; margin-bottom: 10px;">🏡 EMPLACEMENTS</h3>
+                    <p style="margin-bottom: 10px; color: var(--primary); font-size:0.9em;">Agrandis ta ferme pour accueillir plus d'animaux.</p>
+                    <button class="defense-btn" style="background: #5a7a2e;" onclick="buySlots()" id="slot-btn">+2 Emplacements (200💰)</button>
+                    <div class="defense-level" id="slot-info" style="margin-bottom:15px;">Emplacements: 0 / 5</div>
                     <h3 style="color: var(--primary); margin-bottom: 15px;">🛡️ DÉFENSE</h3>
                     <p style="margin-bottom: 15px; color: var(--primary);">Réduit le risque d'être volé. Max niveau 5.</p>
-                    <button class="defense-btn" onclick="buyDefense()" id="defense-btn">Upgrade Défense (300💰)</button>
+                    <button class="defense-btn" onclick="buyDefense()" id="defense-btn">Upgrade Defense (300💰)</button>
                     <div class="defense-level" id="defense-info">Niveau: 0 / 5</div>
                     <h3 style="color: var(--danger); margin-top: 20px; margin-bottom: 15px;">⚔️ ATTAQUE</h3>
-                    <p style="margin-bottom: 8px; color: var(--primary);">Augmente tes chances de vol et débloque des animaux plus rares.</p>
-                    <div style="margin-bottom: 10px; font-size: 0.85em; color: #555;" id="attack-unlock-info">Niv.1: communs · Niv.3: rares · Niv.5: épiques</div>
+                    <p style="margin-bottom: 8px; color: var(--primary);">Augmente tes chances de voler des animaux rares et epiques.</p>
+                    <div style="margin-bottom: 10px; font-size: 0.85em; color: #555;" id="attack-unlock-info">Niv.1: communs 100% · Niv.3: rares 35% · Niv.5: epiques 15%</div>
                     <button class="defense-btn" style="background: var(--danger);" onclick="buyAttack()" id="attack-btn">Upgrade Attaque (400💰)</button>
                     <div class="defense-level" id="attack-info">Niveau: 0 / 5</div>
                 </div>
@@ -492,7 +496,9 @@
             totalIncome: 0,
             lastRaidTime: 0,
             raidCooldown: 300,
-            invincibleUntil: 0  // timestamp jusqu'où le joueur est invincible après un vol
+            invincibleUntil: 0,
+            maxSlots: 5,
+            slotExpansions: 0
         };
 
         // Règles d'attaque par niveau
@@ -500,11 +506,24 @@
         // Niv 1-2 : peut voler les communs
         // Niv 3-4 : peut voler les communs + rares
         // Niv 5   : peut tout voler (épiques inclus)
+        // Probabilites de vol par niveau d'attaque
+        // Lvl 1: communs 100% rares 0% epiques 0%
+        // Lvl 5: communs 35% rares 50% epiques 15%
+        const stealChances = {
+            1: { common: 100, rare: 0,  epic: 0  },
+            2: { common: 80,  rare: 20, epic: 0  },
+            3: { common: 60,  rare: 35, epic: 5  },
+            4: { common: 45,  rare: 42, epic: 13 },
+            5: { common: 35,  rare: 50, epic: 15 },
+        };
+
         function canStealAnimal(animal) {
             if (gameState.attack === 0) return false;
-            if (animal.rarity === 'epic')   return gameState.attack >= 5;
-            if (animal.rarity === 'rare')   return gameState.attack >= 3;
-            return true; // common
+            const chances = stealChances[gameState.attack];
+            const roll = Math.random() * 100;
+            if (animal.rarity === 'epic') return roll < chances.epic;
+            if (animal.rarity === 'rare') return roll < chances.rare;
+            return roll < chances.common;
         }
 
         // Progression cible :
@@ -552,6 +571,10 @@
         function buyAnimal(animalId) {
             const animal = animals.find(a => a.id === animalId);
             const cost = getAnimalCost(animal);
+            if (gameState.animals.length >= gameState.maxSlots) {
+                showNotification('🐾 Plus de place! Vends un animal ou achete des emplacements.', 'danger');
+                return;
+            }
             if (gameState.money >= cost) {
                 gameState.money -= cost;
                 gameState.animals.push({ ...animal, instanceId: Math.random() });
@@ -563,49 +586,99 @@
             }
         }
 
+        function getSlotCost() {
+            return Math.floor(200 * Math.pow(1.8, gameState.slotExpansions));
+        }
+
+        function buySlots() {
+            const cost = getSlotCost();
+            if (gameState.money >= cost) {
+                gameState.money -= cost;
+                gameState.slotExpansions += 1;
+                gameState.maxSlots += 2;
+                renderFarm();
+                renderShop();
+                updateStats();
+                showNotification(`🏡 2 emplacements ajoutes! (${gameState.maxSlots} total)`, 'success');
+            } else {
+                showNotification(`Pas assez d'argent! (${cost}💰 requis)`, 'danger');
+            }
+        }
+
+        function sellAnimal(instanceId) {
+            const idx = gameState.animals.findIndex(a => a.instanceId === instanceId);
+            if (idx === -1) return;
+            const animal = gameState.animals[idx];
+            const sellPrice = Math.floor(animal.baseCost * 0.75);
+            gameState.animals.splice(idx, 1);
+            gameState.totalIncome -= animal.income;
+            gameState.money += sellPrice;
+            renderFarm();
+            renderShop();
+            updateStats();
+            showNotification(`💸 ${animal.emoji} ${animal.name} vendu pour ${sellPrice}💰`, 'success');
+        }
+
+        function getDefenseCost() {
+            return Math.floor(300 * Math.pow(1.75, gameState.defense));
+        }
+
+        function getAttackCost() {
+            return Math.floor(400 * Math.pow(1.75, gameState.attack));
+        }
+
         function buyDefense() {
             if (gameState.defense >= 5) {
-                showNotification('🛡️ Défense déjà au maximum (5)!', 'danger'); return;
+                showNotification('🛡️ Defense deja au maximum (5)!', 'danger'); return;
             }
-            if (gameState.money >= 300) {
-                gameState.money -= 300;
+            const cost = getDefenseCost();
+            if (gameState.money >= cost) {
+                gameState.money -= cost;
                 gameState.defense += 1;
                 updateStats();
                 renderShop();
-                showNotification('🛡️ Défense améliorée! (Niveau ' + gameState.defense + '/5)', 'success');
+                showNotification('🛡️ Defense amelioree! (Niveau ' + gameState.defense + '/5)', 'success');
             } else {
-                showNotification("Pas assez d'argent! (300💰 requis)", 'danger');
+                showNotification("Pas assez d'argent! (" + cost + "💰 requis)", 'danger');
             }
         }
 
         function buyAttack() {
             if (gameState.attack >= 5) {
-                showNotification('⚔️ Attaque déjà au maximum (5)!', 'danger'); return;
+                showNotification('⚔️ Attaque deja au maximum (5)!', 'danger'); return;
             }
-            if (gameState.money >= 400) {
-                gameState.money -= 400;
+            const cost = getAttackCost();
+            if (gameState.money >= cost) {
+                gameState.money -= cost;
                 gameState.attack += 1;
                 updateStats();
                 renderShop();
-                const unlocks = gameState.attack === 3 ? ' 🔓 Rares débloquées!' : gameState.attack === 5 ? ' 🔓 Épiques débloquées!' : '';
-                showNotification('⚔️ Attaque améliorée! (Niveau ' + gameState.attack + '/5)' + unlocks, 'success');
+                showNotification('⚔️ Attaque amelioree! (Niveau ' + gameState.attack + '/5)', 'success');
             } else {
-                showNotification("Pas assez d'argent! (400💰 requis)", 'danger');
+                showNotification("Pas assez d'argent! (" + cost + "💰 requis)", 'danger');
             }
         }
 
         function renderFarm() {
             const farm = document.getElementById('farm');
-            if (gameState.animals.length === 0) {
-                farm.innerHTML = '<div class="empty-farm">Achète tes premiers animaux dans la boutique →</div>';
-                return;
+            const slots = [];
+            for (let i = 0; i < gameState.maxSlots; i++) {
+                const animal = gameState.animals[i];
+                if (animal) {
+                    const sellPrice = Math.floor(animal.baseCost * 0.75);
+                    slots.push(`
+                        <div class="animal ${animal.rarity}" style="position:relative; cursor:default;">
+                            ${animal.emoji}
+                            <button onclick="sellAnimal(${animal.instanceId})" title="Vendre ${animal.name} pour ${sellPrice}💰"
+                                style="position:absolute;top:2px;right:2px;font-size:10px;padding:2px 5px;background:rgba(0,0,0,0.55);color:#fff;border:none;border-radius:4px;cursor:pointer;">
+                                💸${sellPrice}
+                            </button>
+                        </div>`);
+                } else {
+                    slots.push(`<div class="animal" style="opacity:0.25;border:2px dashed #aaa;background:transparent;cursor:default;">🐾</div>`);
+                }
             }
-
-            farm.innerHTML = gameState.animals.map(animal => `
-                <div class="animal ${animal.rarity}">
-                    ${animal.emoji}
-                </div>
-            `).join('');
+            farm.innerHTML = slots.join('');
         }
 
         function updateStats() {
@@ -613,21 +686,34 @@
             document.getElementById('income').textContent = gameState.totalIncome;
             document.getElementById('defense').textContent = gameState.defense;
             document.getElementById('attack').textContent = gameState.attack;
-            document.getElementById('animal-count').textContent = gameState.animals.length;
+            document.getElementById('animal-count').textContent = `${gameState.animals.length}/${gameState.maxSlots}`;
             document.getElementById('defense-info').textContent = `Niveau: ${gameState.defense} / 5`;
             document.getElementById('attack-info').textContent = `Niveau: ${gameState.attack} / 5`;
-            // Désactiver les boutons si max
+
             const defBtn = document.getElementById('defense-btn');
             const atkBtn = document.getElementById('attack-btn');
-            if (defBtn) defBtn.disabled = gameState.defense >= 5;
-            if (atkBtn) atkBtn.disabled = gameState.attack >= 5;
-            // Infos déverrouillage attaque
+            const slotBtn = document.getElementById('slot-btn');
+            if (defBtn) {
+                if (gameState.defense >= 5) { defBtn.disabled = true; defBtn.textContent = 'Defense MAX'; }
+                else { defBtn.disabled = false; defBtn.textContent = `Upgrade Defense (${getDefenseCost()}💰)`; }
+            }
+            if (atkBtn) {
+                if (gameState.attack >= 5) { atkBtn.disabled = true; atkBtn.textContent = 'Attaque MAX'; }
+                else { atkBtn.disabled = false; atkBtn.textContent = `Upgrade Attaque (${getAttackCost()}💰)`; }
+            }
+            if (slotBtn) {
+                slotBtn.textContent = `+2 Emplacements (${getSlotCost()}💰)`;
+            }
+            const slotInfo = document.getElementById('slot-info');
+            if (slotInfo) slotInfo.textContent = `Emplacements: ${gameState.animals.length} / ${gameState.maxSlots}`;
+
             const info = document.getElementById('attack-unlock-info');
             if (info) {
-                if (gameState.attack === 0) info.textContent = '🔒 Niv.1: communs · Niv.3: rares · Niv.5: épiques';
-                else if (gameState.attack < 3) info.textContent = '✅ Communs · 🔒 Niv.3: rares · 🔒 Niv.5: épiques';
-                else if (gameState.attack < 5) info.textContent = '✅ Communs · ✅ Rares · 🔒 Niv.5: épiques';
-                else info.textContent = '✅ Communs · ✅ Rares · ✅ Épiques — MAX!';
+                if (gameState.attack === 0) info.textContent = 'Niv.1: communs 100% · Niv.3: rares 35% · Niv.5: epiques 15%';
+                else {
+                    const c = stealChances[gameState.attack];
+                    info.textContent = `Communs: ${c.common}% · Rares: ${c.rare}% · Epiques: ${c.epic}%`;
+                }
             }
         }
 
