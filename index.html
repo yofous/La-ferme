@@ -513,37 +513,47 @@
         // Aigle  : ~2h
         // Logique : le joueur doit acheter plusieurs animaux intermédiaires pour monter son revenu/s
         const animals = [
-            { id: 'chicken', name: 'Poule',       emoji: '🐔', cost: 80,    income: 1,   rarity: 'common' },
-            { id: 'pig',     name: 'Cochon',       emoji: '🐷', cost: 250,   income: 3,   rarity: 'common' },
-            { id: 'goat',    name: 'Chèvre',       emoji: '🐐', cost: 500,   income: 6,   rarity: 'common' },
-            { id: 'sheep',   name: 'Mouton',       emoji: '🐑', cost: 900,   income: 10,  rarity: 'common' },
-            { id: 'donkey',  name: 'Âne',          emoji: '🫏', cost: 1600,  income: 18,  rarity: 'common' },
-            { id: 'cow',     name: 'Vache',        emoji: '🐄', cost: 5500,  income: 40,  rarity: 'rare'   },
-            { id: 'horse',   name: 'Cheval',       emoji: '🐴', cost: 14000, income: 90,  rarity: 'rare'   },
-            { id: 'eagle',   name: 'Aigle Royal',  emoji: '🦅', cost: 50000, income: 250, rarity: 'epic'   },
+            { id: 'chicken', name: 'Poule',       emoji: '🐔', baseCost: 80,     income: 1,   rarity: 'common' },
+            { id: 'pig',     name: 'Cochon',       emoji: '🐷', baseCost: 250,    income: 3,   rarity: 'common' },
+            { id: 'goat',    name: 'Chevre',       emoji: '🐐', baseCost: 500,    income: 6,   rarity: 'common' },
+            { id: 'sheep',   name: 'Mouton',       emoji: '🐑', baseCost: 900,    income: 10,  rarity: 'common' },
+            { id: 'donkey',  name: 'Ane',          emoji: '🫏', baseCost: 1600,   income: 18,  rarity: 'common' },
+            { id: 'cow',     name: 'Vache',        emoji: '🐄', baseCost: 5500,   income: 40,  rarity: 'rare'   },
+            { id: 'horse',   name: 'Cheval',       emoji: '🐴', baseCost: 14000,  income: 90,  rarity: 'rare'   },
+            { id: 'eagle',   name: 'Aigle Royal',  emoji: '🦅', baseCost: 50000,  income: 100, rarity: 'epic'   },
+            { id: 'bull',    name: 'Taureau',      emoji: '🐂', baseCost: 100000, income: 120, rarity: 'epic'   },
         ];
+
+        function getAnimalCost(animal) {
+            const owned = gameState.animals.filter(a => a.id === animal.id).length;
+            return Math.floor(animal.baseCost * Math.pow(1.15, owned));
+        }
 
         function renderShop() {
             const shop = document.getElementById('shop');
-            shop.innerHTML = animals.map(animal => `
-                <div class="animal-card ${gameState.money < animal.cost ? 'unaffordable' : ''}">
+            shop.innerHTML = animals.map(animal => {
+                const cost = getAnimalCost(animal);
+                const owned = gameState.animals.filter(a => a.id === animal.id).length;
+                return `
+                <div class="animal-card ${gameState.money < cost ? 'unaffordable' : ''}">
                     <div class="animal-emoji">${animal.emoji}</div>
-                    <div class="animal-name">${animal.name}</div>
+                    <div class="animal-name">${animal.name}${owned > 0 ? ` <small style="color:#888">(x${owned})</small>` : ''}</div>
                     <div class="animal-info">${animal.income}💰/s • ${animal.rarity}</div>
-                    <span class="price">${animal.cost}💰</span>
+                    <span class="price">${cost}💰</span>
                     <button class="buy-btn" 
                         onclick="buyAnimal('${animal.id}')"
-                        ${gameState.money < animal.cost ? 'disabled' : ''}>
+                        ${gameState.money < cost ? 'disabled' : ''}>
                         ACHETER
                     </button>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function buyAnimal(animalId) {
             const animal = animals.find(a => a.id === animalId);
-            if (gameState.money >= animal.cost) {
-                gameState.money -= animal.cost;
+            const cost = getAnimalCost(animal);
+            if (gameState.money >= cost) {
+                gameState.money -= cost;
                 gameState.animals.push({ ...animal, instanceId: Math.random() });
                 gameState.totalIncome += animal.income;
                 renderFarm();
