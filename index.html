@@ -421,6 +421,7 @@
         <header>
             <h1>🚜 LA FERME 🚜</h1>
             <p class="subtitle">Collecte • Défends • Vole</p>
+            <a href="profil.html" style="display:inline-block;margin-top:10px;background:#D4A574;color:#2D1810;padding:8px 20px;border-radius:20px;font-weight:800;text-decoration:none;font-size:.95em;transition:background .2s;" onmouseover="this.style.background='#FF6B35';this.style.color='#fff'" onmouseout="this.style.background='#D4A574';this.style.color='#2D1810'">👤 Mon Profil & Classement</a>
         </header>
  
         <div class="stats-bar">
@@ -494,6 +495,8 @@
             defense: 0,
             attack: 0,
             totalIncome: 0,
+            totalEarned: 80,
+            totalAchats: 0,
             lastRaidTime: 0,
             raidCooldown: 300,
             invincibleUntil: 0,
@@ -598,9 +601,11 @@
                 gameState.money -= cost;
                 gameState.animals.push({ ...animal, instanceId: Math.random() });
                 gameState.totalIncome += animal.income;
+                gameState.totalAchats = (gameState.totalAchats || 0) + 1;
                 renderFarm();
                 renderShop();
                 updateStats();
+                sauvegarder();
                 showNotification(`+${animal.emoji} ${animal.name} acquis!`, 'success');
             }
         }
@@ -618,6 +623,7 @@
                 renderFarm();
                 renderShop();
                 updateStats();
+                sauvegarder();
                 showNotification(`🏡 2 emplacements ajoutes! (${gameState.maxSlots} total)`, 'success');
             } else {
                 showNotification(`Pas assez d'argent! (${cost}💰 requis)`, 'danger');
@@ -635,6 +641,7 @@
             renderFarm();
             renderShop();
             updateStats();
+            sauvegarder();
             showNotification(`💸 ${animal.emoji} ${animal.name} vendu pour ${sellPrice}💰`, 'success');
         }
  
@@ -664,6 +671,7 @@
                 gameState.defense += 1;
                 updateStats();
                 renderShop();
+                sauvegarder();
                 showNotification('🛡️ Defense amelioree! (Niveau ' + gameState.defense + '/5)', 'success');
             } else {
                 showNotification("Pas assez d'argent! (" + cost + "💰 requis)", 'danger');
@@ -680,6 +688,7 @@
                 gameState.attack += 1;
                 updateStats();
                 renderShop();
+                sauvegarder();
                 showNotification('⚔️ Attaque amelioree! (Niveau ' + gameState.attack + '/5)', 'success');
             } else {
                 showNotification("Pas assez d'argent! (" + cost + "💰 requis)", 'danger');
@@ -870,9 +879,11 @@
         // Game loop - passive income
         setInterval(() => {
             gameState.money += gameState.totalIncome;
+            gameState.totalEarned = (gameState.totalEarned || 0) + gameState.totalIncome;
             document.getElementById('money').textContent = gameState.money;
             // Réactualiser la boutique pour activer/désactiver les boutons
             renderShop();
+            sauvegarder();
         }, 1000);
  
         // Random raid event (simulate other players attacking)
@@ -921,6 +932,22 @@
             }
         }
  
+        // ── SAUVEGARDE LOCALSTORAGE ──────────────────────────────
+        function sauvegarder() {
+            try {
+                localStorage.setItem("ferme_argent",      gameState.money);
+                localStorage.setItem("ferme_animaux",     gameState.animals.length);
+                localStorage.setItem("ferme_achats",      gameState.totalAchats || 0);
+                localStorage.setItem("ferme_argent_total",gameState.totalEarned || 0);
+                // jours : on calcule depuis la première visite
+                if (!localStorage.getItem("ferme_first_visit")) {
+                    localStorage.setItem("ferme_first_visit", Date.now());
+                }
+                const jours = Math.max(1, Math.floor((Date.now() - parseInt(localStorage.getItem("ferme_first_visit"))) / 86400000) + 1);
+                localStorage.setItem("ferme_jours", jours);
+            } catch(e) {}
+        }
+
         // Initial render
         renderShop();
         renderFarm();
