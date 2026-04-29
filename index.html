@@ -488,8 +488,18 @@
     </div>
  
     <script>
+        // ── SAUVEGARDE COMPLÈTE ──────────────────────────────────
+        function chargerSauvegarde() {
+            try {
+                const saved = localStorage.getItem("ferme_gamestate");
+                if (saved) return JSON.parse(saved);
+            } catch(e) {}
+            return null;
+        }
+
         // Game State
-        let gameState = {
+        const _save = chargerSauvegarde();
+        let gameState = _save ? _save : {
             money: 80,
             animals: [],
             defense: 0,
@@ -503,6 +513,8 @@
             maxSlots: 5,
             slotExpansions: 0
         };
+        // Recalculer le revenu depuis les animaux chargés
+        gameState.totalIncome = gameState.animals.reduce((sum, a) => sum + (a.income || 0), 0);
  
         // Règles d'attaque par niveau
         // Niv 0 : ne peut pas voler
@@ -935,11 +947,13 @@
         // ── SAUVEGARDE LOCALSTORAGE ──────────────────────────────
         function sauvegarder() {
             try {
-                localStorage.setItem("ferme_argent",      gameState.money);
-                localStorage.setItem("ferme_animaux",     gameState.animals.length);
-                localStorage.setItem("ferme_achats",      gameState.totalAchats || 0);
-                localStorage.setItem("ferme_argent_total",gameState.totalEarned || 0);
-                // jours : on calcule depuis la première visite
+                // Sauvegarde complète du gameState (pour le rechargement)
+                localStorage.setItem("ferme_gamestate", JSON.stringify(gameState));
+                // Clés individuelles lues par profil.html
+                localStorage.setItem("ferme_argent",       gameState.money);
+                localStorage.setItem("ferme_animaux",      gameState.animals.length);
+                localStorage.setItem("ferme_achats",       gameState.totalAchats || 0);
+                localStorage.setItem("ferme_argent_total", gameState.totalEarned || 0);
                 if (!localStorage.getItem("ferme_first_visit")) {
                     localStorage.setItem("ferme_first_visit", Date.now());
                 }
