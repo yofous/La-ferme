@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+ 
         :root {
             --primary: #8B4513;
             --secondary: #D4A574;
@@ -21,7 +21,7 @@
             --bg-light: #F5E6D3;
             --text-dark: #1a1a1a;
         }
-
+ 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #2D1810 0%, #4A2511 100%);
@@ -29,19 +29,19 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
+ 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-
+ 
         header {
             text-align: center;
             margin-bottom: 30px;
             animation: slideDown 0.6s ease-out;
         }
-
+ 
         h1 {
             font-size: 3.5em;
             color: var(--secondary);
@@ -50,13 +50,13 @@
             font-weight: 900;
             letter-spacing: 2px;
         }
-
+ 
         .subtitle {
             color: var(--accent);
             font-size: 1.2em;
             font-weight: bold;
         }
-
+ 
         .stats-bar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -64,7 +64,7 @@
             margin-bottom: 30px;
             animation: slideUp 0.6s ease-out;
         }
-
+ 
         .stat {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid var(--secondary);
@@ -74,13 +74,13 @@
             backdrop-filter: blur(10px);
             transition: all 0.3s;
         }
-
+ 
         .stat:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.15);
             box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
         }
-
+ 
         .stat-label {
             color: var(--secondary);
             font-size: 0.9em;
@@ -88,20 +88,20 @@
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
-
+ 
         .stat-value {
             color: var(--accent);
             font-size: 2.2em;
             font-weight: bold;
         }
-
+ 
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.3fr;
             gap: 25px;
             margin-bottom: 30px;
         }
-
+ 
         .panel {
             background: linear-gradient(135deg, rgba(245, 230, 211, 0.95) 0%, rgba(212, 165, 116, 0.9) 100%);
             border: 3px solid var(--primary);
@@ -109,7 +109,7 @@
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-
+ 
         .panel h2 {
             color: var(--primary);
             margin-bottom: 20px;
@@ -119,7 +119,7 @@
             border-bottom: 3px solid var(--accent);
             padding-bottom: 10px;
         }
-
+ 
         .farm {
             background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 50%, #90EE90 100%);
             border-radius: 10px;
@@ -129,7 +129,7 @@
             overflow: hidden;
             border: 3px dashed var(--primary);
         }
-
+ 
         .farm::before {
             content: '';
             position: absolute;
@@ -143,7 +143,7 @@
             background-size: 50px 50px;
             pointer-events: none;
         }
-
+ 
         .animals-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
@@ -151,7 +151,7 @@
             position: relative;
             z-index: 1;
         }
-
+ 
         .animal {
             background: white;
             border: 2px solid var(--primary);
@@ -168,36 +168,36 @@
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-
+ 
         .animal:hover {
             transform: scale(1.1) rotate(5deg);
             box-shadow: 0 6px 15px rgba(255, 107, 53, 0.4);
             background: var(--secondary);
         }
-
+ 
         .animal.rare {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             border-color: #FF6B35;
             animation: glow 2s ease-in-out infinite;
         }
-
+ 
         .animal.epic {
             background: linear-gradient(135deg, #9B59B6, #E74C3C);
             border-color: #E74C3C;
             animation: glow 1s ease-in-out infinite;
         }
-
+ 
         @keyframes glow {
             0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.5); }
             50% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.8); }
         }
-
+ 
         .shop {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
         }
-
+ 
         .animal-card {
             background: linear-gradient(135deg, #FFF8DC 0%, #FFE4B5 100%);
             border: 2px solid var(--primary);
@@ -208,36 +208,36 @@
             transition: all 0.3s;
             position: relative;
         }
-
+ 
         .animal-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 10px 25px rgba(139, 69, 19, 0.3);
             border-color: var(--accent);
         }
-
+ 
         .animal-card.unaffordable {
             opacity: 0.6;
             cursor: not-allowed;
         }
-
+ 
         .animal-emoji {
             font-size: 3em;
             margin-bottom: 10px;
         }
-
+ 
         .animal-name {
             font-weight: bold;
             color: var(--primary);
             margin-bottom: 8px;
             font-size: 0.95em;
         }
-
+ 
         .animal-info {
             font-size: 0.85em;
             color: #666;
             margin-bottom: 10px;
         }
-
+ 
         .price {
             background: var(--accent);
             color: white;
@@ -247,7 +247,7 @@
             margin-bottom: 10px;
             display: block;
         }
-
+ 
         .buy-btn {
             background: var(--success);
             color: white;
@@ -259,24 +259,24 @@
             transition: all 0.3s;
             width: 100%;
         }
-
+ 
         .buy-btn:hover:not(:disabled) {
             background: #04a06f;
             transform: scale(1.05);
         }
-
+ 
         .buy-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             opacity: 0.5;
         }
-
+ 
         .defense-section {
             margin-top: 20px;
             padding-top: 20px;
             border-top: 2px dashed var(--primary);
         }
-
+ 
         .defense-btn {
             background: var(--danger);
             color: white;
@@ -290,18 +290,18 @@
             transition: all 0.3s;
             font-size: 0.95em;
         }
-
+ 
         .defense-btn:hover {
             background: #c5222d;
             transform: scale(1.05);
         }
-
+ 
         .defense-level {
             color: var(--primary);
             font-weight: bold;
             margin-top: 10px;
         }
-
+ 
         .raid-section {
             background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%);
             border: 2px solid var(--danger);
@@ -309,7 +309,7 @@
             padding: 20px;
             margin-top: 20px;
         }
-
+ 
         .raid-btn {
             background: var(--danger);
             color: white;
@@ -322,12 +322,12 @@
             transition: all 0.3s;
             width: 100%;
         }
-
+ 
         .raid-btn:hover {
             background: #c5222d;
             transform: scale(1.02);
         }
-
+ 
         .notification {
             position: fixed;
             bottom: 20px;
@@ -341,15 +341,15 @@
             z-index: 1000;
             font-weight: bold;
         }
-
+ 
         .notification.success {
             background: var(--success);
         }
-
+ 
         .notification.danger {
             background: var(--danger);
         }
-
+ 
         @keyframes slideDown {
             from {
                 opacity: 0;
@@ -360,7 +360,7 @@
                 transform: translateY(0);
             }
         }
-
+ 
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -371,7 +371,7 @@
                 transform: translateY(0);
             }
         }
-
+ 
         @keyframes slideInRight {
             from {
                 opacity: 0;
@@ -382,7 +382,7 @@
                 transform: translateX(0);
             }
         }
-
+ 
         @keyframes slideOutRight {
             from {
                 opacity: 1;
@@ -393,23 +393,23 @@
                 transform: translateX(100px);
             }
         }
-
+ 
         .empty-farm {
             color: var(--primary);
             text-align: center;
             padding: 30px;
             font-size: 1.2em;
         }
-
+ 
         @media (max-width: 768px) {
             .main-grid {
                 grid-template-columns: 1fr;
             }
-
+ 
             h1 {
                 font-size: 2.2em;
             }
-
+ 
             .stats-bar {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -422,7 +422,7 @@
             <h1>🚜 LA FERME 🚜</h1>
             <p class="subtitle">Collecte • Défends • Vole</p>
         </header>
-
+ 
         <div class="stats-bar">
             <div class="stat">
                 <div class="stat-label">💰 Argent</div>
@@ -445,7 +445,7 @@
                 <div class="stat-value" id="animal-count">0</div>
             </div>
         </div>
-
+ 
         <div class="main-grid">
             <div class="panel">
                 <h2>🎯 TA FERME</h2>
@@ -462,7 +462,7 @@
                     <p style="margin-top: 15px; font-size: 0.9em; color: var(--primary);"><span id="raid-cooldown-label">Cooldown:</span> <span id="raid-cooldown">✅ Prêt!</span></p>
                 </div>
             </div>
-
+ 
             <div class="panel">
                 <h2>🏪 BOUTIQUE</h2>
                 <div class="shop" id="shop"></div>
@@ -485,7 +485,7 @@
             </div>
         </div>
     </div>
-
+ 
     <script>
         // Game State
         let gameState = {
@@ -500,7 +500,7 @@
             maxSlots: 5,
             slotExpansions: 0
         };
-
+ 
         // Règles d'attaque par niveau
         // Niv 0 : ne peut pas voler
         // Niv 1-2 : peut voler les communs
@@ -516,7 +516,7 @@
             4: { common: 45,  rare: 42, epic: 13 },
             5: { common: 35,  rare: 50, epic: 15 },
         };
-
+ 
         // Multiplicateurs d'attaque et défense : 2, 3.5, 5, 6.5, 2
         const defenseMultipliers = {
             0: 1,
@@ -526,7 +526,7 @@
             4: 6.5,
             5: 2
         };
-
+ 
         const attackMultipliers = {
             0: 1,
             1: 2,
@@ -535,7 +535,7 @@
             4: 6.5,
             5: 2
         };
-
+ 
         function canStealAnimal(animal) {
             if (gameState.attack === 0) return false;
             const chances = stealChances[gameState.attack];
@@ -544,7 +544,7 @@
             if (animal.rarity === 'rare') return roll < chances.rare;
             return roll < chances.common;
         }
-
+ 
         // Progression cible :
         // Vache  : ~30-45 min de jeu actif
         // Cheval : ~1h
@@ -561,12 +561,12 @@
             { id: 'eagle',   name: 'Aigle Royal',  emoji: '🦅', baseCost: 50000,  income: 100, rarity: 'epic'   },
             { id: 'bull',    name: 'Taureau',      emoji: '🐂', baseCost: 100000, income: 120, rarity: 'epic'   },
         ];
-
+ 
         function getAnimalCost(animal) {
             const owned = gameState.animals.filter(a => a.id === animal.id).length;
             return Math.floor(animal.baseCost * Math.pow(1.15, owned));
         }
-
+ 
         function renderShop() {
             const shop = document.getElementById('shop');
             shop.innerHTML = animals.map(animal => {
@@ -586,7 +586,7 @@
                 </div>`;
             }).join('');
         }
-
+ 
         function buyAnimal(animalId) {
             const animal = animals.find(a => a.id === animalId);
             const cost = getAnimalCost(animal);
@@ -604,11 +604,11 @@
                 showNotification(`+${animal.emoji} ${animal.name} acquis!`, 'success');
             }
         }
-
+ 
         function getSlotCost() {
             return Math.floor(2000 * Math.pow(1.8, gameState.slotExpansions));
         }
-
+ 
         function buySlots() {
             const cost = getSlotCost();
             if (gameState.money >= cost) {
@@ -623,7 +623,7 @@
                 showNotification(`Pas assez d'argent! (${cost}💰 requis)`, 'danger');
             }
         }
-
+ 
         function sellAnimal(instanceId) {
             const idx = gameState.animals.findIndex(a => a.instanceId === instanceId);
             if (idx === -1) return;
@@ -637,7 +637,7 @@
             updateStats();
             showNotification(`💸 ${animal.emoji} ${animal.name} vendu pour ${sellPrice}💰`, 'success');
         }
-
+ 
         function getDefenseCost() {
             let cost = 300;
             for (let i = 0; i < gameState.defense; i++) {
@@ -645,7 +645,7 @@
             }
             return Math.floor(cost);
         }
-
+ 
         function getAttackCost() {
             let cost = 400;
             for (let i = 0; i < gameState.attack; i++) {
@@ -653,7 +653,7 @@
             }
             return Math.floor(cost);
         }
-
+ 
         function buyDefense() {
             if (gameState.defense >= 5) {
                 showNotification('🛡️ Defense deja au maximum (5)!', 'danger'); return;
@@ -669,7 +669,7 @@
                 showNotification("Pas assez d'argent! (" + cost + "💰 requis)", 'danger');
             }
         }
-
+ 
         function buyAttack() {
             if (gameState.attack >= 5) {
                 showNotification('⚔️ Attaque deja au maximum (5)!', 'danger'); return;
@@ -685,7 +685,7 @@
                 showNotification("Pas assez d'argent! (" + cost + "💰 requis)", 'danger');
             }
         }
-
+ 
         function renderFarm() {
             const farm = document.getElementById('farm');
             const slots = [];
@@ -707,7 +707,7 @@
             }
             farm.innerHTML = slots.join('');
         }
-
+ 
         function updateStats() {
             document.getElementById('money').textContent = gameState.money;
             document.getElementById('income').textContent = gameState.totalIncome;
@@ -716,7 +716,7 @@
             document.getElementById('animal-count').textContent = `${gameState.animals.length}/${gameState.maxSlots}`;
             document.getElementById('defense-info').textContent = `Niveau: ${gameState.defense} / 5`;
             document.getElementById('attack-info').textContent = `Niveau: ${gameState.attack} / 5`;
-
+ 
             const defBtn = document.getElementById('defense-btn');
             const atkBtn = document.getElementById('attack-btn');
             const slotBtn = document.getElementById('slot-btn');
@@ -733,7 +733,7 @@
             }
             const slotInfo = document.getElementById('slot-info');
             if (slotInfo) slotInfo.textContent = `Emplacements: ${gameState.animals.length} / ${gameState.maxSlots}`;
-
+ 
             const info = document.getElementById('attack-unlock-info');
             if (info) {
                 if (gameState.attack === 0) info.textContent = 'Niv.1: communs 100% · Niv.3: rares 35% · Niv.5: epiques 15%';
@@ -743,35 +743,35 @@
                 }
             }
         }
-
+ 
         function performRaid() {
             const now = Date.now();
-
+ 
             // Cooldown
             if (now - gameState.lastRaidTime < gameState.raidCooldown * 1000) {
                 showNotification('⏳ Trop tôt! Attends un peu...', 'danger');
                 return;
             }
-
+ 
             // Niveau d'attaque requis
             if (gameState.attack === 0) {
                 showNotification('⚔️ Tu dois avoir au moins Attaque niveau 1 pour voler!', 'danger');
                 return;
             }
-
+ 
             if (gameState.animals.length === 0) {
                 showNotification("Tu n'as aucun animal à montrer!", 'danger');
                 return;
             }
-
+ 
             const opponents = generateRandomOpponents();
             if (opponents.length === 0) {
                 showNotification('Aucun rival trouvé...', 'danger');
                 return;
             }
-
+ 
             const enemy = opponents[Math.floor(Math.random() * opponents.length)];
-
+ 
             // Filtrer les animaux volables selon le niveau d'attaque
             const stealableAnimals = enemy.animals.filter(a => canStealAnimal(a));
             if (stealableAnimals.length === 0) {
@@ -780,12 +780,12 @@
                 updateRaidCooldown();
                 return;
             }
-
+ 
             // Calcul du taux d'échec : chaque niveau de défense adverse = +12%, compensé par niveau d'attaque = -8%
             const defenseLevel = enemy.defense || 0;
             const failChance = Math.max(0, Math.min(80, defenseLevel * 12 - gameState.attack * 8));
             const failed = Math.random() * 100 < failChance;
-
+ 
             if (failed) {
                 // Pénalité d'échec : on perd de l'argent
                 const penalty = 50 + defenseLevel * 30;
@@ -805,17 +805,17 @@
                 // Invincibilité pour la victime : simulé côté joueur si attaqué dans les 3 prochaines minutes
                 // (dans un vrai multi, on marquerait le joueur ciblé)
             }
-
+ 
             gameState.lastRaidTime = now;
             renderFarm();
             updateStats();
             updateRaidCooldown();
         }
-
+ 
         function generateRandomOpponents() {
             const opponents = [];
             const numOpponents = Math.floor(Math.random() * 3) + 3;
-
+ 
             for (let i = 0; i < numOpponents; i++) {
                 const numAnimals = Math.floor(Math.random() * 5) + 2;
                 const opponentAnimals = [];
@@ -833,11 +833,11 @@
                     invincible: isInvincible
                 });
             }
-
+ 
             // Filtrer : exclure < 2 animaux (protection nouveau joueur) et invincibles
             return opponents.filter(opp => opp.animals.length > 1 && !opp.invincible);
         }
-
+ 
         function generateRandomPlayerName() {
             const firstNames = ['Jean-Pierre', 'Marie', 'Claude', 'Brigitte', 'Pierre', 'Sophie', 'Luc', 'Anne', 'Michel', 'Céline'];
             const lastNames = ['Dupont', 'Martin', 'Bernard', 'Leclerc', 'Legrand', 'Petit', 'Beaumont', 'Leduc', 'Fontaine'];
@@ -845,7 +845,7 @@
             const last = lastNames[Math.floor(Math.random() * lastNames.length)];
             return `${first} ${last}`;
         }
-
+ 
         function updateRaidCooldown() {
             const cooldown = document.getElementById('raid-cooldown');
             const remaining = gameState.raidCooldown - Math.floor((Date.now() - gameState.lastRaidTime) / 1000);
@@ -858,7 +858,7 @@
                 cooldown.textContent = '✅ Prêt!';
             }
         }
-
+ 
         function showNotification(message, type = 'success') {
             const notif = document.createElement('div');
             notif.className = `notification ${type}`;
@@ -866,7 +866,7 @@
             document.body.appendChild(notif);
             setTimeout(() => notif.remove(), 5000);
         }
-
+ 
         // Game loop - passive income
         setInterval(() => {
             gameState.money += gameState.totalIncome;
@@ -874,11 +874,11 @@
             // Réactualiser la boutique pour activer/désactiver les boutons
             renderShop();
         }, 1000);
-
+ 
         // Random raid event (simulate other players attacking)
         setInterval(() => {
             if (gameState.animals.length <= 1) return;
-
+ 
             // Invincibilité : si le joueur vient de se faire voler, il est protégé 3 min
             if (Date.now() < gameState.invincibleUntil) {
                 const remaining = Math.ceil((gameState.invincibleUntil - Date.now()) / 1000);
@@ -888,7 +888,7 @@
                 }
                 return;
             }
-
+ 
             if (Math.random() < 0.15) {
                 const randomIdx = Math.floor(Math.random() * gameState.animals.length);
                 const stolenAnimal = gameState.animals[randomIdx];
@@ -907,7 +907,7 @@
                 }
             }
         }, 8000);
-
+ 
         function updateShieldTimer() {
             const remaining = Math.ceil((gameState.invincibleUntil - Date.now()) / 1000);
             if (remaining > 0) {
@@ -920,7 +920,7 @@
                 document.getElementById('raid-cooldown-label').textContent = 'Cooldown:';
             }
         }
-
+ 
         // Initial render
         renderShop();
         renderFarm();
