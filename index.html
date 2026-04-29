@@ -517,6 +517,25 @@
             5: { common: 35,  rare: 50, epic: 15 },
         };
 
+        // Multiplicateurs d'attaque et défense : 2, 3.5, 5, 6.5, 2
+        const defenseMultipliers = {
+            0: 1,
+            1: 2,
+            2: 3.5,
+            3: 5,
+            4: 6.5,
+            5: 2
+        };
+
+        const attackMultipliers = {
+            0: 1,
+            1: 2,
+            2: 3.5,
+            3: 5,
+            4: 6.5,
+            5: 2
+        };
+
         function canStealAnimal(animal) {
             if (gameState.attack === 0) return false;
             const chances = stealChances[gameState.attack];
@@ -587,7 +606,7 @@
         }
 
         function getSlotCost() {
-            return Math.floor(200 * Math.pow(1.8, gameState.slotExpansions));
+            return Math.floor(2000 * Math.pow(1.8, gameState.slotExpansions));
         }
 
         function buySlots() {
@@ -620,11 +639,19 @@
         }
 
         function getDefenseCost() {
-            return Math.floor(300 * Math.pow(1.75, gameState.defense));
+            let cost = 300;
+            for (let i = 0; i < gameState.defense; i++) {
+                cost *= defenseMultipliers[i + 1];
+            }
+            return Math.floor(cost);
         }
 
         function getAttackCost() {
-            return Math.floor(400 * Math.pow(1.75, gameState.attack));
+            let cost = 400;
+            for (let i = 0; i < gameState.attack; i++) {
+                cost *= attackMultipliers[i + 1];
+            }
+            return Math.floor(cost);
         }
 
         function buyDefense() {
