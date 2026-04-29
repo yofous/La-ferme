@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Ferme — Profil & Classement</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Condensed:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --soil:    #3b2a1a;
+      --bark:    #5c3d1e;
+      --hay:     #d4a843;
+      --grass:   #5a8a3c;
+      --leaf:    #7ab648;
+      --sky:     #a8d8ea;
+      --cream:   #fdf6e3;
+      --sun:     #f5c842;
+      --red:     #c0392b;
+      --panel:   rgba(253,246,227,0.92);
+      --shadow:  0 4px 24px rgba(59,42,26,0.18);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(160deg, #b8e0a0 0%, #d4edbb 40%, #a8d8ea 100%);
+      min-height: 100vh;
+      color: var(--soil);
+    }
+
+    /* ── HEADER ────────────────────────────────────────────── */
+    header {
+      background: var(--bark);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    }
+    header h1 {
+      font-family: 'Cabin Condensed', sans-serif;
+      font-size: 1.6rem;
+      color: var(--hay);
+      letter-spacing: 1px;
+    }
+    header .back-btn {
+      background: var(--hay);
+      color: var(--bark);
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: .9rem;
+      margin-left: auto;
+      transition: background .2s;
+    }
+    header .back-btn:hover { background: var(--sun); }
+
+    /* ── TABS ───────────────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 18px 16px 0;
+    }
+    .tab-btn {
+      background: rgba(255,255,255,0.55);
+      border: 2px solid var(--grass);
+      color: var(--soil);
+      border-radius: 20px;
+      padding: 8px 22px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: .95rem;
+      transition: all .2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--grass);
+      color: #fff;
+    }
+
+    /* ── SECTIONS ───────────────────────────────────────────── */
+    .section { display: none; padding: 20px 16px 40px; max-width: 860px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    /* ── PANEL ──────────────────────────────────────────────── */
+    .panel {
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      border: 2px solid rgba(90,138,60,0.2);
+    }
+    .panel h2 {
+      font-family: 'Cabin Condensed', sans-serif;
+      font-size: 1.25rem;
+      color: var(--grass);
+      margin-bottom: 14px;
+      letter-spacing: .5px;
+    }
+
+    /* ── AUTH FORM ──────────────────────────────────────────── */
+    #auth-area {
+      text-align: center;
+    }
+    #auth-area p { margin-bottom: 12px; color: var(--bark); font-weight: 600; }
+    .input-group { display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto 14px; }
+    .input-group input {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 2px solid #c8b89a;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      background: #fff;
+      color: var(--soil);
+    }
+    .input-group input:focus { outline: none; border-color: var(--grass); }
+    .btn-primary {
+      background: var(--grass);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 28px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn-primary:hover { background: var(--leaf); transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--grass);
+      color: var(--grass);
+      border-radius: 12px;
+      padding: 8px 20px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-secondary:hover { background: var(--grass); color: #fff; }
+    .btn-danger {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 7px 16px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      cursor: pointer;
+    }
+    .auth-toggle { margin-top: 10px; font-size: .88rem; color: var(--bark); }
+    .auth-toggle span { color: var(--grass); cursor: pointer; font-weight: 700; }
+    .auth-toggle span:hover { text-decoration: underline; }
+    #auth-error { color: var(--red); font-size: .88rem; margin-top: 6px; }
+
+    /* ── PROFIL CARD ────────────────────────────────────────── */
+    .profil-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .avatar-display {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--hay), var(--sun));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      border: 4px solid var(--grass);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .profil-info { flex: 1; }
+    .profil-info .username {
+      font-family: 'Cabin Condensed', sans-serif;
+      font-size: 1.5rem;
+      color: var(--soil);
+    }
+    .profil-info .titre {
+      display: inline-block;
+      background: var(--hay);
+      color: var(--bark);
+      border-radius: 20px;
+      padding: 2px 12px;
+      font-size: .82rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .profil-stats { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+    .stat-pill {
+      background: rgba(90,138,60,0.12);
+      border: 1.5px solid var(--grass);
+      border-radius: 10px;
+      padding: 4px 12px;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--soil);
+    }
+    .stat-pill span { color: var(--grass); }
+
+    /* ── SKIN GRID ──────────────────────────────────────────── */
+    .skin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+    }
+    .skin-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 10px 6px;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all .2s;
+      background: rgba(255,255,255,0.5);
+    }
+    .skin-item:hover:not(.locked) { border-color: var(--leaf); background: rgba(90,138,60,0.1); }
+    .skin-item.selected { border-color: var(--grass); background: rgba(90,138,60,0.18); box-shadow: 0 0 0 3px rgba(90,138,60,0.2); }
+    .skin-item.locked { opacity: 0.4; cursor: not-allowed; }
+    .skin-emoji { font-size: 2.4rem; }
+    .skin-name { font-size: .7rem; font-weight: 700; color: var(--bark); text-align: center; line-height: 1.2; }
+    .skin-lock { font-size: .7rem; }
+
+    /* ── TITRE GRID ─────────────────────────────────────────── */
+    .titre-list { display: flex; flex-direction: column; gap: 8px; }
+    .titre-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.5);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .titre-item:hover:not(.locked) { border-color: var(--hay); }
+    .titre-item.selected { border-color: var(--hay); background: rgba(212,168,67,0.12); }
+    .titre-item.locked { opacity: 0.45; cursor: not-allowed; }
+    .titre-badge {
+      background: var(--hay); color: var(--bark);
+      border-radius: 16px; padding: 3px 12px;
+      font-size: .82rem; font-weight: 700; white-space: nowrap;
+    }
+    .titre-desc { font-size: .82rem; color: var(--bark); flex: 1; }
+    .titre-cond { font-size: .75rem; color: #888; }
+
+    /* ── SUCCÈS GRID ────────────────────────────────────────── */
+    .succes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .succes-card {
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.5);
+      border: 2px solid transparent;
+      transition: all .2s;
+    }
+    .succes-card.unlocked { border-color: var(--leaf); background: rgba(90,138,60,0.08); }
+    .succes-card.unlocked:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+    .succes-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .succes-icon { font-size: 1.8rem; }
+    .succes-name { font-weight: 800; font-size: .9rem; color: var(--soil); }
+    .succes-desc { font-size: .78rem; color: var(--bark); margin-bottom: 8px; }
+    .succes-bar-bg {
+      background: #ddd; border-radius: 99px; height: 8px; overflow: hidden;
+    }
+    .succes-bar-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--leaf), var(--hay));
+      transition: width .6s cubic-bezier(.34,1.56,.64,1);
+    }
+    .succes-progress { font-size: .72rem; color: #888; margin-top: 4px; text-align: right; }
+    .succes-reward { font-size: .72rem; margin-top: 6px; color: var(--grass); font-weight: 700; }
+
+    /* ── CLASSEMENT ─────────────────────────────────────────── */
+    .classement-table { width: 100%; border-collapse: collapse; }
+    .classement-table th {
+      font-family: 'Cabin Condensed', sans-serif;
+      font-size: .9rem; letter-spacing: .5px;
+      color: var(--grass);
+      padding: 6px 10px;
+      border-bottom: 2px solid rgba(90,138,60,0.2);
+      text-align: left;
+    }
+    .classement-table td {
+      padding: 10px 10px;
+      font-size: .9rem;
+      border-bottom: 1px solid rgba(90,138,60,0.1);
+    }
+    .classement-table tr:last-child td { border-bottom: none; }
+    .classement-table tr.me td { background: rgba(90,138,60,0.09); font-weight: 700; }
+    .rank-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      font-weight: 800; font-size: .85rem;
+    }
+    .rank-1 { background: linear-gradient(135deg,#ffd700,#ffb300); color: #6b4a00; }
+    .rank-2 { background: linear-gradient(135deg,#c0c0c0,#a0a0a0); color: #444; }
+    .rank-3 { background: linear-gradient(135deg,#cd7f32,#a0522d); color: #fff; }
+    .rank-other { background: rgba(0,0,0,0.08); color: var(--soil); }
+    .player-avatar-sm { font-size: 1.3rem; }
+    .player-name-col { display: flex; align-items: center; gap: 8px; }
+    .titre-inline { font-size: .72rem; background: var(--hay); color: var(--bark); border-radius: 10px; padding: 1px 8px; font-weight: 700; }
+    .score-col { font-family: 'Cabin Condensed', sans-serif; font-size: 1.1rem; color: var(--grass); }
+
+    /* ── LOADING / MSG ──────────────────────────────────────── */
+    .loading { text-align: center; padding: 30px; color: var(--bark); font-weight: 600; }
+    .msg-info { background: rgba(90,138,60,0.1); border-left: 4px solid var(--grass); border-radius: 8px; padding: 10px 14px; font-size: .88rem; color: var(--bark); margin-bottom: 12px; }
+    .msg-warn { background: rgba(212,168,67,0.15); border-left: 4px solid var(--hay); border-radius: 8px; padding: 10px 14px; font-size: .88rem; color: var(--bark); margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span style="font-size:1.6rem">🌾</span>
+  <h1>La Ferme — Profil</h1>
+  <button class="back-btn" onclick="window.location.href='index.html'">← Retour au jeu</button>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('tab-profil')">👤 Mon Profil</button>
+  <button class="tab-btn" onclick="showTab('tab-succes')">🏆 Succès</button>
+  <button class="tab-btn" onclick="showTab('tab-classement')">🌍 Classement</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ONGLET PROFIL
+════════════════════════════════════════════════════════════ -->
+<div id="tab-profil" class="section active">
+
+  <!-- AUTH NON CONNECTÉ -->
+  <div id="auth-area" class="panel" style="display:none">
+    <p id="auth-title">Connexion</p>
+    <div id="auth-error"></div>
+    <div class="input-group">
+      <input type="email" id="auth-email" placeholder="Email" autocomplete="email">
+      <input type="password" id="auth-password" placeholder="Mot de passe" autocomplete="current-password">
+      <input type="text" id="auth-pseudo" placeholder="Pseudo (3-16 caractères)" style="display:none" autocomplete="username">
+    </div>
+    <button class="btn-primary" id="auth-submit-btn">Se connecter</button>
+    <div class="auth-toggle" id="auth-toggle-text">
+      Pas encore de compte ? <span onclick="toggleAuthMode()">S'inscrire</span>
+    </div>
+  </div>
+
+  <!-- PROFIL CONNECTÉ -->
+  <div id="profil-area" style="display:none">
+    <div class="panel">
+      <h2>Mon personnage</h2>
+      <div class="profil-card">
+        <div class="avatar-display" id="avatar-preview">🧑‍🌾</div>
+        <div class="profil-info">
+          <div class="username" id="display-username">—</div>
+          <div class="titre" id="display-titre">Nouveau fermier</div>
+          <div class="profil-stats">
+            <div class="stat-pill">🪙 <span id="stat-argent">0</span> pièces</div>
+            <div class="stat-pill">⭐ <span id="stat-succes">0</span> succès</div>
+            <div class="stat-pill">📅 <span id="stat-jours">0</span> jours</div>
+          </div>
+        </div>
+        <button class="btn-danger" onclick="deconnexion()">Déconnexion</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🎭 Skins d'avatar</h2>
+      <div class="msg-info">Cliquez sur un skin débloqué pour l'équiper.</div>
+      <div class="skin-grid" id="skin-grid"><!-- généré JS --></div>
+    </div>
+
+    <div class="panel">
+      <h2>🏷️ Titres</h2>
+      <div class="msg-info">Cliquez sur un titre débloqué pour l'afficher sur le classement.</div>
+      <div class="titre-list" id="titre-list"><!-- généré JS --></div>
+    </div>
+  </div>
+
+  <div id="profil-loading" class="loading">Chargement…</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ONGLET SUCCÈS
+════════════════════════════════════════════════════════════ -->
+<div id="tab-succes" class="section">
+  <div id="succes-loading" class="loading">Chargement…</div>
+  <div class="panel" id="succes-panel" style="display:none">
+    <h2>🏆 Succès</h2>
+    <div class="msg-info" id="succes-count-msg"></div>
+    <div class="succes-grid" id="succes-grid"><!-- généré JS --></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ONGLET CLASSEMENT
+════════════════════════════════════════════════════════════ -->
+<div id="tab-classement" class="section">
+  <div class="panel">
+    <h2>🌍 Classement mondial</h2>
+    <div class="msg-warn" id="classement-login-warn" style="display:none">
+      Connectez-vous pour apparaître dans le classement !
+    </div>
+    <div id="classement-loading" class="loading">Chargement…</div>
+    <table class="classement-table" id="classement-table" style="display:none">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Joueur</th>
+          <th>Score</th>
+          <th>Succès</th>
+        </tr>
+      </thead>
+      <tbody id="classement-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<!-- FIREBASE + LOGIQUE                                           -->
+<!-- ─────────────────────────────────────────────────────────── -->
+<script type="module">
+import { initializeApp }          from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+                                   from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, orderBy, limit, getDocs }
+                                   from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+/* ── CONFIG FIREBASE ─────────────────────────────────────── */
+const firebaseConfig = {
+  apiKey: "AIzaSyAS-WiZ8O38q6KbIS_FnWKz8Jl2HLaXVhw",
+  authDomain: "laferme-ac977.firebaseapp.com",
+  projectId: "laferme-ac977",
+  storageBucket: "laferme-ac977.firebasestorage.app",
+  messagingSenderId: "698835119945",
+  appId: "1:698835119945:web:355885902266a5f7d57498"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ── DONNÉES STATIQUES ───────────────────────────────────── */
+const SKINS = [
+  { id:"paysan",    emoji:"🧑‍🌾", nom:"Paysan",        condition: null,              debloque_par:"defaut" },
+  { id:"chapeau",   emoji:"👒",    nom:"Chapeau de paille", condition:"argent_1000",  debloque_par:"argent" },
+  { id:"cowboy",    emoji:"🤠",    nom:"Cowboy",        condition:"argent_5000",      debloque_par:"argent" },
+  { id:"fermier_f", emoji:"👩‍🌾", nom:"Fermière",      condition:"succes_5",         debloque_par:"succes" },
+  { id:"chef",      emoji:"👨‍🍳", nom:"Chef cuisinier",condition:"succes_10",        debloque_par:"succes" },
+  { id:"scientifique",emoji:"🧑‍🔬",nom:"Scientifique", condition:"succes_15",        debloque_par:"succes" },
+  { id:"astronaute",emoji:"🧑‍🚀", nom:"Astronaute",    condition:"succes_20",        debloque_par:"succes" },
+  { id:"roi",       emoji:"👑",    nom:"Roi de la ferme",condition:"argent_50000",   debloque_par:"argent" },
+];
+
+const TITRES = [
+  { id:"nouveau",   label:"Nouveau fermier",  condition: null,          desc:"Titre de départ" },
+  { id:"apprenti",  label:"Apprenti fermier", condition:"argent_500",   desc:"Avoir 500 pièces" },
+  { id:"producteur",label:"Producteur",       condition:"argent_2000",  desc:"Avoir 2 000 pièces" },
+  { id:"eleveur",   label:"Éleveur",          condition:"succes_5",     desc:"Débloquer 5 succès" },
+  { id:"expert",    label:"Fermier expert",   condition:"succes_10",    desc:"Débloquer 10 succès" },
+  { id:"legend",    label:"Légende",          condition:"succes_20",    desc:"Débloquer 20 succès" },
+  { id:"millionnaire",label:"Millionnaire",   condition:"argent_1000000",desc:"Avoir 1 000 000 pièces" },
+];
+
+const SUCCES = [
+  { id:"premier_argent", icon:"🪙", nom:"Premiers sous",      desc:"Gagner 100 pièces",        cible:100,  stat:"argent_total", recompense:"Skin Chapeau" },
+  { id:"mille_pieces",   icon:"💰", nom:"Mille pièces",       desc:"Gagner 1 000 pièces",      cible:1000, stat:"argent_total", recompense:"Titre Apprenti" },
+  { id:"cinq_mille",     icon:"💵", nom:"Riche fermier",      desc:"Avoir 5 000 pièces",       cible:5000, stat:"argent_total", recompense:"Skin Cowboy" },
+  { id:"premiere_recolte",icon:"🌾",nom:"Première récolte",   desc:"Récolter 1 fois",          cible:1,    stat:"recoltes",     recompense:"Titre Producteur" },
+  { id:"dix_recoltes",   icon:"🌿", nom:"Cultivateur",        desc:"Récolter 10 fois",         cible:10,   stat:"recoltes",     recompense:"+50 pièces bonus" },
+  { id:"cent_recoltes",  icon:"🌱", nom:"Grand cultivateur",  desc:"Récolter 100 fois",        cible:100,  stat:"recoltes",     recompense:"Titre Éleveur" },
+  { id:"premier_animal", icon:"🐔", nom:"Ami des bêtes",      desc:"Acheter 1 animal",         cible:1,    stat:"animaux",      recompense:"+100 pièces" },
+  { id:"cinq_animaux",   icon:"🐮", nom:"Éleveur",            desc:"Avoir 5 animaux",          cible:5,    stat:"animaux",      recompense:"Skin Fermière" },
+  { id:"dix_animaux",    icon:"🐑", nom:"Grand éleveur",      desc:"Avoir 10 animaux",         cible:10,   stat:"animaux",      recompense:"Skin Chef" },
+  { id:"nourrir_10",     icon:"🌽", nom:"Bon berger",         desc:"Nourrir 10 fois",          cible:10,   stat:"nourritures",  recompense:"+80 pièces" },
+  { id:"nourrir_100",    icon:"🥕", nom:"Nourricier",         desc:"Nourrir 100 fois",         cible:100,  stat:"nourritures",  recompense:"Titre Expert" },
+  { id:"jour_1",         icon:"📅", nom:"Premier jour",       desc:"Jouer 1 jour",             cible:1,    stat:"jours",        recompense:"+20 pièces" },
+  { id:"jour_7",         icon:"🗓️", nom:"Une semaine",        desc:"Jouer 7 jours",            cible:7,    stat:"jours",        recompense:"Skin Scientifique" },
+  { id:"jour_30",        icon:"📆", nom:"Vétéran",            desc:"Jouer 30 jours",           cible:30,   stat:"jours",        recompense:"Skin Astronaute" },
+  { id:"commerce_1",     icon:"🛒", nom:"Premier achat",      desc:"Faire 1 achat en boutique",cible:1,    stat:"achats",       recompense:"+30 pièces" },
+  { id:"commerce_10",    icon:"🏪", nom:"Commerçant",         desc:"Faire 10 achats",          cible:10,   stat:"achats",       recompense:"+200 pièces" },
+];
+
+/* ── ÉTAT LOCAL ──────────────────────────────────────────── */
+let currentUser  = null;
+let profilData   = null;
+let authMode     = "login"; // login | register
+
+/* ── ONGLETS ─────────────────────────────────────────────── */
+window.showTab = function(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  event.target.classList.add("active");
+  if (id === "tab-classement") chargerClassement();
+  if (id === "tab-succes")    afficherSucces();
+};
+
+/* ── AUTH STATE ──────────────────────────────────────────── */
+onAuthStateChanged(auth, async user => {
+  document.getElementById("profil-loading").style.display = "none";
+  if (user) {
+    currentUser = user;
+    document.getElementById("auth-area").style.display    = "none";
+    document.getElementById("profil-area").style.display  = "block";
+    await chargerProfil();
+  } else {
+    currentUser = null;
+    profilData  = null;
+    document.getElementById("auth-area").style.display    = "block";
+    document.getElementById("profil-area").style.display  = "none";
+    document.getElementById("classement-login-warn").style.display = "block";
+  }
+});
+
+/* ── AUTH MODE TOGGLE ───────────────────────────────────── */
+window.toggleAuthMode = function() {
+  authMode = authMode === "login" ? "register" : "login";
+  const isReg = authMode === "register";
+  document.getElementById("auth-title").textContent  = isReg ? "Inscription" : "Connexion";
+  document.getElementById("auth-submit-btn").textContent = isReg ? "S'inscrire" : "Se connecter";
+  document.getElementById("auth-pseudo").style.display  = isReg ? "block" : "none";
+  document.getElementById("auth-toggle-text").innerHTML = isReg
+    ? `Déjà un compte ? <span onclick="toggleAuthMode()">Se connecter</span>`
+    : `Pas encore de compte ? <span onclick="toggleAuthMode()">S'inscrire</span>`;
+  document.getElementById("auth-error").textContent = "";
+};
+
+/* ── SUBMIT AUTH ─────────────────────────────────────────── */
+document.getElementById("auth-submit-btn").addEventListener("click", async () => {
+  const email    = document.getElementById("auth-email").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const pseudo   = document.getElementById("auth-pseudo").value.trim();
+  const errEl    = document.getElementById("auth-error");
+  errEl.textContent = "";
+
+  if (!email || !password) { errEl.textContent = "Email et mot de passe requis."; return; }
+  if (authMode === "register") {
+    if (pseudo.length < 3 || pseudo.length > 16) { errEl.textContent = "Pseudo : 3 à 16 caractères."; return; }
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await creerProfilInitial(cred.user.uid, pseudo);
+    } catch(e) {
+      errEl.textContent = traduireErreur(e.code);
+    }
+  } else {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch(e) {
+      errEl.textContent = traduireErreur(e.code);
+    }
+  }
+});
+
+function traduireErreur(code) {
+  const map = {
+    "auth/email-already-in-use": "Email déjà utilisé.",
+    "auth/invalid-email": "Email invalide.",
+    "auth/weak-password": "Mot de passe trop faible (6 caractères min).",
+    "auth/user-not-found": "Aucun compte avec cet email.",
+    "auth/wrong-password": "Mot de passe incorrect.",
+    "auth/invalid-credential": "Email ou mot de passe incorrect.",
+  };
+  return map[code] || "Erreur : " + code;
+}
+
+/* ── DÉCONNEXION ─────────────────────────────────────────── */
+window.deconnexion = async function() {
+  await signOut(auth);
+};
+
+/* ── CRÉER PROFIL INITIAL ────────────────────────────────── */
+async function creerProfilInitial(uid, pseudo) {
+  const jeuData = lireLocalStorage();
+  const profil = {
+    pseudo,
+    skinActif:  "paysan",
+    titreActif: "nouveau",
+    skinsDebloques:  ["paysan"],
+    titresDebloques: ["nouveau"],
+    succes: [],
+    stats: {
+      argent_total:  jeuData.argent  || 0,
+      recoltes:      jeuData.recoltes || 0,
+      animaux:       jeuData.animaux  || 0,
+      nourritures:   jeuData.nourritures || 0,
+      achats:        jeuData.achats   || 0,
+      jours:         jeuData.jours    || 1,
+    },
+    score:      jeuData.argent || 0,
+    createdAt:  new Date().toISOString(),
+  };
+  await setDoc(doc(db, "joueurs", uid), profil);
+}
+
+/* ── LIRE LOCALSTORAGE DU JEU ────────────────────────────── */
+function lireLocalStorage() {
+  try {
+    return {
+      argent:       parseInt(localStorage.getItem("ferme_argent")       || "0"),
+      recoltes:     parseInt(localStorage.getItem("ferme_recoltes")     || "0"),
+      animaux:      parseInt(localStorage.getItem("ferme_animaux")      || "0"),
+      nourritures:  parseInt(localStorage.getItem("ferme_nourritures")  || "0"),
+      achats:       parseInt(localStorage.getItem("ferme_achats")       || "0"),
+      jours:        parseInt(localStorage.getItem("ferme_jours")        || "1"),
+      argent_total: parseInt(localStorage.getItem("ferme_argent_total") || localStorage.getItem("ferme_argent") || "0"),
+    };
+  } catch(e) { return {}; }
+}
+
+/* ── CHARGER PROFIL ──────────────────────────────────────── */
+async function chargerProfil() {
+  const snap = await getDoc(doc(db, "joueurs", currentUser.uid));
+  if (!snap.exists()) {
+    // Profil inexistant → on demande le pseudo
+    const p = prompt("Choisissez un pseudo (3-16 caractères) :");
+    if (p && p.length >= 3 && p.length <= 16) {
+      await creerProfilInitial(currentUser.uid, p);
+      await chargerProfil();
+    }
+    return;
+  }
+  profilData = snap.data();
+
+  // Sync stats depuis localStorage
+  const jeuData = lireLocalStorage();
+  const updates = {};
+  let changed = false;
+  const statsKeys = ["argent_total","recoltes","animaux","nourritures","achats","jours"];
+  const jeuKeys   = ["argent_total","recoltes","animaux","nourritures","achats","jours"];
+  statsKeys.forEach((k, i) => {
+    const val = jeuData[jeuKeys[i]] || 0;
+    if (val > (profilData.stats?.[k] || 0)) {
+      if (!updates.stats) updates.stats = { ...(profilData.stats || {}) };
+      updates.stats[k] = val;
+      changed = true;
+    }
+  });
+  // score = argent total
+  const score = (updates.stats?.argent_total || profilData.stats?.argent_total || 0);
+  if (score !== profilData.score) { updates.score = score; changed = true; }
+
+  if (changed) {
+    await updateDoc(doc(db, "joueurs", currentUser.uid), updates);
+    profilData = { ...profilData, ...updates };
+  }
+
+  // Vérifier succès débloqués
+  await verifierSucces();
+
+  // Afficher
+  afficherProfilUI();
+  afficherSkins();
+  afficherTitres();
+}
+
+/* ── VÉRIFIER SUCCÈS ─────────────────────────────────────── */
+async function verifierSucces() {
+  if (!profilData) return;
+  const stats = profilData.stats || {};
+  const debloques = profilData.succes || [];
+  let nouveaux = [];
+  let newSkins  = [...(profilData.skinsDebloques  || ["paysan"])];
+  let newTitres = [...(profilData.titresDebloques || ["nouveau"])];
+
+  SUCCES.forEach(s => {
+    if (debloques.includes(s.id)) return;
+    const val = stats[s.stat] || 0;
+    if (val >= s.cible) {
+      nouveaux.push(s.id);
+    }
+  });
+
+  if (nouveaux.length > 0) {
+    const totalDebloques = debloques.length + nouveaux.length;
+    // Débloquer skins selon argent/succès
+    const argent = stats.argent_total || 0;
+    SKINS.forEach(sk => {
+      if (!newSkins.includes(sk.id) && sk.condition) {
+        const [type, val] = sk.condition.split("_");
+        if (type === "argent" && argent >= parseInt(val)) newSkins.push(sk.id);
+        if (type === "succes" && totalDebloques >= parseInt(val)) newSkins.push(sk.id);
+      }
+    });
+    TITRES.forEach(t => {
+      if (!newTitres.includes(t.id) && t.condition) {
+        const [type, val] = t.condition.split("_");
+        if (type === "argent" && argent >= parseInt(val)) newTitres.push(t.id);
+        if (type === "succes" && totalDebloques >= parseInt(val)) newTitres.push(t.id);
+      }
+    });
+
+    const updates = {
+      succes: [...debloques, ...nouveaux],
+      skinsDebloques:  newSkins,
+      titresDebloques: newTitres,
+    };
+    await updateDoc(doc(db, "joueurs", currentUser.uid), updates);
+    profilData = { ...profilData, ...updates };
+  }
+}
+
+/* ── AFFICHER PROFIL UI ──────────────────────────────────── */
+function afficherProfilUI() {
+  if (!profilData) return;
+  const skin  = SKINS.find(s => s.id === profilData.skinActif) || SKINS[0];
+  const titre = TITRES.find(t => t.id === profilData.titreActif) || TITRES[0];
+  document.getElementById("avatar-preview").textContent    = skin.emoji;
+  document.getElementById("display-username").textContent  = profilData.pseudo || "Fermier";
+  document.getElementById("display-titre").textContent     = titre.label;
+  document.getElementById("stat-argent").textContent       = (profilData.stats?.argent_total || 0).toLocaleString("fr");
+  document.getElementById("stat-succes").textContent       = (profilData.succes?.length || 0);
+  document.getElementById("stat-jours").textContent        = (profilData.stats?.jours || 0);
+}
+
+/* ── AFFICHER SKINS ──────────────────────────────────────── */
+function afficherSkins() {
+  const grid     = document.getElementById("skin-grid");
+  const debloques= profilData?.skinsDebloques || ["paysan"];
+  const actif    = profilData?.skinActif || "paysan";
+  grid.innerHTML = SKINS.map(sk => {
+    const unlock  = debloques.includes(sk.id);
+    const sel     = sk.id === actif;
+    return `<div class="skin-item ${unlock ? "" : "locked"} ${sel ? "selected" : ""}"
+                 onclick="${unlock ? `choisirSkin('${sk.id}')` : ""}">
+      <div class="skin-emoji">${sk.emoji}</div>
+      <div class="skin-name">${sk.nom}</div>
+      ${!unlock ? `<div class="skin-lock">🔒</div>` : ""}
+    </div>`;
+  }).join("");
+}
+
+/* ── CHOISIR SKIN ────────────────────────────────────────── */
+window.choisirSkin = async function(id) {
+  if (!currentUser || !profilData) return;
+  if (!(profilData.skinsDebloques || []).includes(id)) return;
+  await updateDoc(doc(db, "joueurs", currentUser.uid), { skinActif: id });
+  profilData.skinActif = id;
+  afficherProfilUI();
+  afficherSkins();
+};
+
+/* ── AFFICHER TITRES ─────────────────────────────────────── */
+function afficherTitres() {
+  const list     = document.getElementById("titre-list");
+  const debloques= profilData?.titresDebloques || ["nouveau"];
+  const actif    = profilData?.titreActif || "nouveau";
+  list.innerHTML = TITRES.map(t => {
+    const unlock  = debloques.includes(t.id);
+    const sel     = t.id === actif;
+    return `<div class="titre-item ${unlock ? "" : "locked"} ${sel ? "selected" : ""}"
+                 onclick="${unlock ? `choisirTitre('${t.id}')` : ""}">
+      <span class="titre-badge">${t.label}</span>
+      <span class="titre-desc">${t.desc}</span>
+      ${!unlock ? `<span class="titre-cond">🔒 ${t.condition?.replace("_"," ") || ""}</span>` : ""}
+    </div>`;
+  }).join("");
+}
+
+/* ── CHOISIR TITRE ───────────────────────────────────────── */
+window.choisirTitre = async function(id) {
+  if (!currentUser || !profilData) return;
+  if (!(profilData.titresDebloques || []).includes(id)) return;
+  await updateDoc(doc(db, "joueurs", currentUser.uid), { titreActif: id });
+  profilData.titreActif = id;
+  afficherProfilUI();
+  afficherTitres();
+};
+
+/* ── AFFICHER SUCCÈS ─────────────────────────────────────── */
+function afficherSucces() {
+  document.getElementById("succes-loading").style.display = "none";
+  document.getElementById("succes-panel").style.display   = "block";
+  const debloques = profilData?.succes || [];
+  const stats     = profilData?.stats  || {};
+  const grid = document.getElementById("succes-grid");
+  document.getElementById("succes-count-msg").textContent =
+    `${debloques.length} / ${SUCCES.length} succès débloqués`;
+  grid.innerHTML = SUCCES.map(s => {
+    const unlocked = debloques.includes(s.id);
+    const valActuel = Math.min(stats[s.stat] || 0, s.cible);
+    const pct = Math.round((valActuel / s.cible) * 100);
+    return `<div class="succes-card ${unlocked ? "unlocked" : ""}">
+      <div class="succes-header">
+        <span class="succes-icon">${s.icon}</span>
+        <span class="succes-name">${s.nom}</span>
+        ${unlocked ? `<span style="margin-left:auto;font-size:.9rem">✅</span>` : ""}
+      </div>
+      <div class="succes-desc">${s.desc}</div>
+      <div class="succes-bar-bg"><div class="succes-bar-fill" style="width:${pct}%"></div></div>
+      <div class="succes-progress">${valActuel.toLocaleString("fr")} / ${s.cible.toLocaleString("fr")}</div>
+      <div class="succes-reward">🎁 ${s.recompense}</div>
+    </div>`;
+  }).join("");
+}
+
+/* ── CLASSEMENT ──────────────────────────────────────────── */
+async function chargerClassement() {
+  document.getElementById("classement-loading").style.display = "block";
+  document.getElementById("classement-table").style.display   = "none";
+  if (!currentUser) {
+    document.getElementById("classement-login-warn").style.display = "block";
+  }
+  try {
+    const q    = query(collection(db, "joueurs"), orderBy("score", "desc"), limit(50));
+    const snap = await getDocs(q);
+    const rows = [];
+    snap.forEach(d => rows.push({ id: d.id, ...d.data() }));
+
+    const tbody = document.getElementById("classement-body");
+    tbody.innerHTML = rows.map((j, i) => {
+      const rank  = i + 1;
+      const isMe  = currentUser && j.id === currentUser.uid;
+      const skin  = SKINS.find(s => s.id === j.skinActif) || SKINS[0];
+      const titre = TITRES.find(t => t.id === j.titreActif) || TITRES[0];
+      const rankClass = rank <= 3 ? `rank-${rank}` : "rank-other";
+      return `<tr class="${isMe ? "me" : ""}">
+        <td><span class="rank-badge ${rankClass}">${rank <= 3 ? ["🥇","🥈","🥉"][rank-1] : rank}</span></td>
+        <td>
+          <div class="player-name-col">
+            <span class="player-avatar-sm">${skin.emoji}</span>
+            <span>${j.pseudo || "Fermier"}</span>
+            <span class="titre-inline">${titre.label}</span>
+            ${isMe ? `<span style="font-size:.7rem;color:var(--grass)">◀ Moi</span>` : ""}
+          </div>
+        </td>
+        <td class="score-col">${(j.score || 0).toLocaleString("fr")} 🪙</td>
+        <td>${(j.succes?.length || 0)} 🏆</td>
+      </tr>`;
+    }).join("");
+
+    document.getElementById("classement-loading").style.display = "none";
+    document.getElementById("classement-table").style.display   = "table";
+  } catch(e) {
+    document.getElementById("classement-loading").textContent = "Erreur de chargement.";
+    console.error(e);
+  }
+}
+</script>
+</body>
+</html>
